@@ -1,0 +1,14 @@
+{
+    "name": "cordova-plugin-plc4x-tests",
+    "version": "1.0.0-dev",
+    "description": "",
+    "cordova": {
+        "id": "cordova-plugin-plc4x-tests",
+        "platforms": ["android"]
+    },
+    "keywords": [
+        "ecosystem:cordova"
+    ],
+    "author": "Niklas Merz",
+    "license": ""
+}

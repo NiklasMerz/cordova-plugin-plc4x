@@ -1,0 +1,24 @@
+dependencies {
+
+	implementation 'com.android.support:design:28.0.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support:support-annotations:28.0.0'
+
+    implementation 'org.apache.plc4x:plc4j-api:0.5.0'
+    implementation 'org.apache.plc4x:plc4j-driver-s7:0.5.0'
+
+    implementation 'de.mindpipe.android:android-logging-log4j:1.0.3'
+    implementation 'log4j:log4j:1.2.17'
+    implementation 'org.slf4j:slf4j-api:1.7.30'
+    implementation 'org.slf4j:slf4j-log4j12:1.7.30'
+}
+
+android {
+    packagingOptions {
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/INDEX.LIST'
+        exclude 'META-INF/io.netty*'
+    }
+}

@@ -1,0 +1,43 @@
+{
+  "name": "cordova-plugin-plc4x",
+  "version": "0.0.0",
+  "description": "",
+  "cordova": {
+    "id": "cordova-plugin-plc4x",
+    "platforms": [
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/niklasmerz/cordova-plugin-plc4x"
+  },
+  "keywords": [
+    "cordova",
+    "plugin",
+    "android",
+    "ecosystem:cordova"
+  ],
+  "author": "Niklas Merz",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/niklasmerz/cordova-plugin-plc4x/issues"
+  },
+  "homepage": "https://github.com/niklasmerz/cordova-plugin-plc4x#readme",
+  "devDependencies": {
+    "cordova": "git+https://github.com/apache/cordova.git",
+    "eslint": "^6.5.1",
+    "jasmine": "^3.2.0"
+  },
+  "scripts": {
+    "test": "npm run eslint",
+    "eslint": "npx eslint www",
+    "test-travis": "npm run test-ios",
+    "test-appveyor": "npm run test-browser",
+    "test-local": "npm run test-browser && npm run test-android && npm run test-ios",
+    "test-android": "npx cordova --platform android --plugin  $(pwd)",
+    "test-browser": "npx cordova --platform browser --plugin  $(pwd)",
+    "test-saucelabs": "npm run test-saucelabs-ios && npm run test-saucelabs-android",
+    "test-saucelabs-android": "npx cordova --config ./pr/android-7.0 --plugin  $(pwd) --shouldUseSauce"
+  }
+}

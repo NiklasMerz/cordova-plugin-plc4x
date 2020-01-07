@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-plc4x" version="3.0.0">
+  <name>PLC4X</name>
+  <description>Use PLC4X</description>
+  <license></license>
+  <keywords>cordova,plugin,android,fingerprint</keywords>
+  <repo>https://github.com/niklasmerz/cordova-plugin-plc4x.git</repo>
+  <issue>https://github.com/cordova-plugin-plc4x/issues</issue>
+
+  <js-module src="www/PLC4X.js" name="PLC4X">
+    <clobbers target="PLC4X"/>
+  </js-module>
+
+
+  <!-- android -->
+  <platform name="android">
+    <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="PLC4X">
+        <param name="android-package" value="dev.merz.cordova.plc4x.PLC4X"/>
+      </feature>
+    </config-file>
+
+    <config-file target="AndroidManifest.xml" parent="/*">
+	    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+      <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    </config-file>
+
+    <framework src="src/android/build.gradle" custom="true" type="gradleReference"/>
+    <source-file src="src/android/PLC4X.java" target-dir="src/dev/merz/cordova/plc4x"/>
+  </platform>
+
+  <engines>
+    <engine name="cordova-android" version=">=8.0.0" />
+  </engines>
+
+</plugin>
