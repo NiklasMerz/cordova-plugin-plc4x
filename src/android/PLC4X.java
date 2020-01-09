@@ -11,14 +11,19 @@ import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
+import org.apache.cordova.LOG;
 import org.apache.cordova.PluginResult;
 import org.apache.log4j.Level;
 import org.apache.plc4x.java.PlcDriverManager;
 import org.apache.plc4x.java.api.PlcConnection;
 import org.apache.plc4x.java.api.messages.PlcReadResponse;
+import org.apache.plc4x.java.spi.PlcDriver;
+import org.apache.plc4x.java.s7.S7PlcDriver;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.net.URI;
 
 import de.mindpipe.android.logging.log4j.LogConfigurator;
 
@@ -59,11 +64,19 @@ public class PLC4X extends CordovaPlugin {
 
         try {
             String connectionString = args.getString(0);
-            this.plcConnection = new PlcDriverManager().getConnection(connectionString);
-            if (!plcConnection.getMetadata().canRead()) {
+            //this.plcConnection = new PlcDriverManager().getConnection(connectionString);
+
+            //Use S7 driver manually for now
+            PlcDriver driver = new S7PlcDriver();
+            Log.v(TAG, driver.getProtocolName());
+            this.plcConnection = driver.connect(connectionString);
+            this.plcConnection.connect();
+            if (!this.plcConnection.getMetadata().canRead()) {
                 this.sendError("This connection doesn't support reading.");
                 return;
             }
+
+            this.sendSuccess(this.plcConnection.isConnected() ? "Connected": "Not connected");
         } catch (JSONException e) {
             this.sendError("Cannot parse connection string" + e.getMessage());
             return;
@@ -74,7 +87,7 @@ public class PLC4X extends CordovaPlugin {
     }
 
     private void read() {
-        if(this.plcConnection == null) {
+        if(this.plcConnection == null || !this.plcConnection.isConnected()) {
             this.sendError("Not connected");
             return;
         }
@@ -91,6 +104,7 @@ public class PLC4X extends CordovaPlugin {
             this.sendSuccess(res.toString());
 
         } catch (Exception e) {
+            LOG.e(TAG, e.getMessage());
             this.sendError("PlcConnection: " + e.getMessage());
         }
     }
