@@ -25,6 +25,12 @@
       <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     </config-file>
 
+    <framework src="org.apache.plc4x:plc4j-api:0.5.0" />
+    <framework src="org.apache.plc4x:plc4j-driver-s7:0.5.0" />
+    <framework src="de.mindpipe.android:android-logging-log4j:1.0.3" />
+    <framework src="log4j:log4j:1.2.17" />
+    <framework src="org.slf4j:slf4j-api:1.7.30" />
+    <framework src="org.slf4j:slf4j-log4j12:1.7.30" />
     <framework src="src/android/build.gradle" custom="true" type="gradleReference"/>
     <source-file src="src/android/PLC4X.java" target-dir="src/dev/merz/cordova/plc4x"/>
   </platform>
