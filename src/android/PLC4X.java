@@ -1,10 +1,5 @@
 package dev.merz.cordova.plc4x;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 
 import org.apache.cordova.CallbackContext;
@@ -17,13 +12,9 @@ import org.apache.log4j.Level;
 import org.apache.plc4x.java.PlcDriverManager;
 import org.apache.plc4x.java.api.PlcConnection;
 import org.apache.plc4x.java.api.messages.PlcReadResponse;
-import org.apache.plc4x.java.spi.PlcDriver;
-import org.apache.plc4x.java.s7.S7PlcDriver;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.net.URI;
 
 import de.mindpipe.android.logging.log4j.LogConfigurator;
 
@@ -35,7 +26,6 @@ public class PLC4X extends CordovaPlugin {
 
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
-        Log.v(TAG, "Init");
     }
 
     public boolean execute(final String action, JSONArray args, CallbackContext callbackContext) {
@@ -58,32 +48,29 @@ public class PLC4X extends CordovaPlugin {
 
         logConfigurator.setFileName(cordova.getActivity().getApplicationContext().getExternalFilesDir("log").getAbsolutePath() + "app.log");
         logConfigurator.setRootLevel(Level.DEBUG);
-        // Set log level of a specific logger
-        logConfigurator.setLevel("org.apache", Level.ERROR);
+        logConfigurator.setLevel("org.apache", Level.DEBUG);
         logConfigurator.configure();
 
-        try {
-            String connectionString = args.getString(0);
-            //this.plcConnection = new PlcDriverManager().getConnection(connectionString);
+        cordova.getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                try {
+                    String connectionString = args.getString(0);
+                    plcConnection = new PlcDriverManager().getConnection(connectionString);
 
-            //Use S7 driver manually for now
-            PlcDriver driver = new S7PlcDriver();
-            Log.v(TAG, driver.getProtocolName());
-            this.plcConnection = driver.connect(connectionString);
-            this.plcConnection.connect();
-            if (!this.plcConnection.getMetadata().canRead()) {
-                this.sendError("This connection doesn't support reading.");
-                return;
+                    if (!plcConnection.getMetadata().canRead()) {
+                        sendError("This connection doesn't support reading.");
+                        return;
+                    }
+
+                    sendSuccess(plcConnection.isConnected() ? "Connected": "Not connected");
+                } catch (JSONException e) {
+                    sendError("Cannot parse connection string" + e.getMessage());
+                    return;
+                } catch (Exception e) {
+                    sendError("PlcConnection: " + e.getMessage());
+                }
             }
-
-            this.sendSuccess(this.plcConnection.isConnected() ? "Connected": "Not connected");
-        } catch (JSONException e) {
-            this.sendError("Cannot parse connection string" + e.getMessage());
-            return;
-        } catch (Exception e) {
-            this.sendError("PlcConnection: " + e.getMessage());
-        }
-
+        });
     }
 
     private void read() {
@@ -111,15 +98,15 @@ public class PLC4X extends CordovaPlugin {
 
     private void sendError(String message) {
         PluginResult result = new PluginResult(PluginResult.Status.ERROR, message);
-            result.setKeepCallback(true);
-            cordova.getActivity().runOnUiThread(() ->
-                    PLC4X.this.mCallbackContext.sendPluginResult(result));
+        result.setKeepCallback(true);
+        cordova.getActivity().runOnUiThread(() ->
+                PLC4X.this.mCallbackContext.sendPluginResult(result));
     }
 
     private void sendSuccess(String message) {
         PluginResult result = new PluginResult(PluginResult.Status.OK, message);
-            result.setKeepCallback(true);
-            cordova.getActivity().runOnUiThread(() ->
-                    PLC4X.this.mCallbackContext.sendPluginResult(result));
+        result.setKeepCallback(true);
+        cordova.getActivity().runOnUiThread(() ->
+                PLC4X.this.mCallbackContext.sendPluginResult(result));
     }
 }
