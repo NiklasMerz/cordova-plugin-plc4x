@@ -5,7 +5,7 @@
   version="1.0.0-dev">
   <name>plc4x Tests</name>
   <description></description>
-  <license></license>
+  <license>Apache 2.0</license>
   <keywords>cordova,plugin,android,plc4x,</keywords>
   <repo>https://github.com/niklasmerz/cordova-plugin-plc4x.git</repo>
   <issue>https://github.com/cordova-plugin-plc4x/issues</issue>

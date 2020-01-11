@@ -19,7 +19,7 @@
     "ecosystem:cordova"
   ],
   "author": "Niklas Merz",
-  "license": "",
+  "license": "Apache 2.0",
   "bugs": {
     "url": "https://github.com/niklasmerz/cordova-plugin-plc4x/issues"
   },
