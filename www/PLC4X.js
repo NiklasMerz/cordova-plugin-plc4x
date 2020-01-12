@@ -30,13 +30,13 @@ PLC4X.prototype.connect = function (params, successCallback, errorCallback) {
   );
 };
 
-PLC4X.prototype.read = function (successCallback, errorCallback) {
+PLC4X.prototype.read = function (items, successCallback, errorCallback) {
   cordova.exec(
     successCallback,
     errorCallback,
     "PLC4X",
     "read",
-    [{}]
+    [items]
   );
 };
 

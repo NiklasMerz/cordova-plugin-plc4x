@@ -26,6 +26,7 @@ import org.apache.cordova.PluginResult;
 import org.apache.log4j.Level;
 import org.apache.plc4x.java.PlcDriverManager;
 import org.apache.plc4x.java.api.PlcConnection;
+import org.apache.plc4x.java.api.messages.PlcReadRequest;
 import org.apache.plc4x.java.api.messages.PlcReadResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,7 +53,7 @@ public class PLC4X extends CordovaPlugin {
             this.connect(args);
 
         } else if (action.equals("read")){
-            this.read();
+            this.read(args);
         }
 
         return true;
@@ -88,17 +89,27 @@ public class PLC4X extends CordovaPlugin {
         });
     }
 
-    private void read() {
+    private void read(JSONArray args) {
         if(this.plcConnection == null || !this.plcConnection.isConnected()) {
             this.sendError("Not connected");
             return;
         }
 
+        PlcReadRequest.Builder request = plcConnection.readRequestBuilder();
+        
         try {
-            // TODO: Just some random stuff right, arguments of function must be parsed
-            PlcReadResponse response = plcConnection.readRequestBuilder()
-                    .addItem("item1", "%DB555.DBD0:DINT")
-                    .build()
+            JSONArray items = args.getJSONArray(0);
+            for (int i = 0; i < items.length(); i++) {
+                JSONObject item = items.getJSONObject(i);
+                request.addItem(item.getString("name"), item.getString("fieldQuery"));
+            }
+        } catch (JSONException e) {
+            this.sendError("Invalid arguments: "+ e.getMessage());
+            return;
+        }
+
+        try {
+            PlcReadResponse response = request.build()
                     .execute()
                     .get();
             Long res = response.getLong("item1");
