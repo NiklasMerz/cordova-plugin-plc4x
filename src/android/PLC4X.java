@@ -96,7 +96,7 @@ public class PLC4X extends CordovaPlugin {
         }
 
         PlcReadRequest.Builder request = plcConnection.readRequestBuilder();
-        
+
         try {
             JSONArray items = args.getJSONArray(0);
             for (int i = 0; i < items.length(); i++) {
@@ -136,6 +136,13 @@ public class PLC4X extends CordovaPlugin {
 
     private void sendSuccess(String message) {
         PluginResult result = new PluginResult(PluginResult.Status.OK, message);
+        result.setKeepCallback(true);
+        cordova.getActivity().runOnUiThread(() ->
+                PLC4X.this.mCallbackContext.sendPluginResult(result));
+    }
+
+    private void sendSuccess(JSONArray arr) {
+        PluginResult result = new PluginResult(PluginResult.Status.OK, arr);
         result.setKeepCallback(true);
         cordova.getActivity().runOnUiThread(() ->
                 PLC4X.this.mCallbackContext.sendPluginResult(result));
