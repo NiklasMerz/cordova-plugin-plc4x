@@ -112,9 +112,14 @@ public class PLC4X extends CordovaPlugin {
             PlcReadResponse response = request.build()
                     .execute()
                     .get();
-            Long res = response.getLong("item1");
+            JSONArray items = args.getJSONArray(0);
+            for(int i = 0; i < items.length(); i++) {
+                JSONObject item = items.getJSONObject(i);
+                Long res = response.getLong(item.getString(("name")));
+                item.put("value", res);
+            }
 
-            this.sendSuccess(res.toString());
+            this.sendSuccess(items);
 
         } catch (Exception e) {
             LOG.e(TAG, e.getMessage());
